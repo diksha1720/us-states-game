@@ -36,4 +36,3 @@ df = pd.DataFrame(missed_states)
 df.to_csv("missed_states.csv")
 
 
-screen.exitonclick()
