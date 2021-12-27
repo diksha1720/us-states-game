@@ -7,12 +7,14 @@ image = "blank_states_img.gif"
 screen.addshape(image)
 turtle.shape(image)
 
-current_score = 0
-flag = True
-while current_score < 50:
-    user_input = screen.textinput(title=(f"Score: {current_score}/50"), prompt="Enter a state name").title()
+guessed_states = []
 
-    data = pd.read_csv("50_states.csv")
+data = pd.read_csv("50_states.csv")
+
+while len(guessed_states) < 50:
+    user_input = screen.textinput(title=(f"Score: {len(guessed_states)}/50"), prompt="Enter a state name").title()
+    if user_input == "Exit":
+        break
     if (len(data[data["state"] == user_input])) == 0:
         continue
     x_val = int(data[data["state"] == user_input]["x"])
@@ -22,6 +24,16 @@ while current_score < 50:
     state.penup()
     state.goto(x_val, y_val)
     state.write(f"{user_input}", align="center", font=("Courier", 12, "normal"))
-    current_score += 1
+    guessed_states.append(user_input)
+
+all_states = data.state.tolist()
+missed_states = []
+for state in all_states:
+    if state not in guessed_states:
+        missed_states.append(state)
+
+df = pd.DataFrame(missed_states)
+df.to_csv("missed_states.csv")
+
 
 screen.exitonclick()
